@@ -1,4 +1,7 @@
 Retake guns menu
 
-Hi, here i created this for our retake server, but we removed it and i dont know what with this..
-I hope you will enjoy this coding, if you have question ask me..
+Basic /guns menu for player.
+
+Players can choose only one from primary guns, and they can choose only first 15 second at round start..
+
+"i dont know what with this" Javierko - 2017
