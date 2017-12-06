@@ -1,4 +1,4 @@
-Retake guns menu
+<h1>Retake guns menu</h1>
 
 Basic /guns menu for player.
 
