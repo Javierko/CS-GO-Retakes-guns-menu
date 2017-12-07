@@ -288,15 +288,15 @@ public Action CallBack(client,args)
 {
     if(useable==0)
     {
-        ReplyToCommand(client, "[Hexmania] Tento prikaz muzes pouzit jen prvnich 15 sekund.");
+        ReplyToCommand(client, "[SM] You can use /guns only 15 secons at round start!");
     }
     if(useable==1)
     {
         arr[client][1] = -1;
         new Handle:menu = CreateMenu(menu1, MenuAction_Select | MenuAction_End | MenuAction_DisplayItem);
-        SetMenuTitle(menu, "Vyber si moznost");
-        AddMenuItem(menu, "Vybrat si zbran", "Vybrat si zbran");
-        AddMenuItem(menu, "Vybrat si zbran kazde kolo", "Vybrat si zbran kazde kolo");
+        SetMenuTitle(menu, "Choose option:");
+        AddMenuItem(menu, "Choose gun this round", "Vybrat si zbran");
+        AddMenuItem(menu, "Choose gun every round", "Vybrat si zbran kazde kolo");
         DisplayMenu(menu, client, MENU_TIME_FOREVER);
     }
 }
@@ -315,7 +315,7 @@ public menu1(Handle:menu, MenuAction:action, param1, param2)
             if (StrEqual(item, "Vybrat si zbran"))
             {
                 new Handle:menu2 = CreateMenu(guns, MenuAction_Select | MenuAction_Cancel | MenuAction_End | MenuAction_DisplayItem);
-                SetMenuTitle(menu2, "Vyber si zbran");
+                SetMenuTitle(menu2, "Choose gun");
                 AddMenuItem(menu2, "AK-47", "AK-47");
                 AddMenuItem(menu2, "Galil AR", "Galil AR");
                 AddMenuItem(menu2, "SSG 08", "SSG 08");
@@ -364,13 +364,13 @@ public menu1(Handle:menu, MenuAction:action, param1, param2)
             if (StrEqual(item, "Vybrat si zbran"))
             {
                 new String:translation[128];
-                Format(translation, sizeof(translation), "%T", "Vybrat si zbran", param1);
+                Format(translation, sizeof(translation), "%T", "Vybrat si zbran", param1);   //Choose gun this round
                 return RedrawMenuItem(translation);
             }
-            else if (StrEqual(item, "Vybrat si zbran kazde kolo"))
+            else if (StrEqual(item, "Vybrat si zbran kazde kolo"))  //Choose gun every round
             {
                 new String:translation[128];
-                Format(translation, sizeof(translation), "%T", "Vybrat si zbran kazde kolo", param1);
+                Format(translation, sizeof(translation), "%T", "Vybrat si zbran kazde kolo", param1);    //Choose gun every round
                 return RedrawMenuItem(translation);
             }
         }
@@ -1163,9 +1163,9 @@ public void EventCallBack(Event event, const char[] name, bool dontBroadcast)
         if(IsClientInGame(h)==true&&GetClientTeam(h)!=1&&arr[h][1]==-1)
         {
             new Handle:menu = CreateMenu(menu1, MenuAction_Select | MenuAction_End | MenuAction_DisplayItem);
-            SetMenuTitle(menu, "Vyber si moznost");
-            AddMenuItem(menu, "Vybrat si zbran", "Vybrat si zbran");
-            AddMenuItem(menu, "Vybrat si zbran kazde kolo", "Vybrat si zbran kazde kolo");
+            SetMenuTitle(menu, "Choose option:");
+            AddMenuItem(menu, "Choose gun this round", "Vybrat si zbran");
+            AddMenuItem(menu, "Choose gun every round", "Vybrat si zbran kazde kolo");
             DisplayMenu(menu, h, 15.0);
         }
     }
