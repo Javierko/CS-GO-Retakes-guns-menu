@@ -1,0 +1,33 @@
+"Phrases"
+{
+	"CantUse15secs"
+	{
+		"cze" "[YourPortal] You can use /guns only 15 secons at round start!"
+	}
+	
+	"MainMenuChooseOption"
+	{
+		"cze" "Choose option:"
+	}
+	
+	"ChooseGun"
+	{
+		"cze" "Choose gun this round"
+	}
+	
+	"ChooseGunEveryRound"
+	{
+		"cze" "Choose gun every round"
+	}
+	
+	"ChooseGun"
+	{
+		"cze" "Choose gun"
+	}
+	
+	"CantUse15secs"
+	{
+		"cze" "[YourPortal] You can use /guns only 15 secons at round start!"
+	}
+}
+

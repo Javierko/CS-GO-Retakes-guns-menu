@@ -29,6 +29,8 @@ public OnPluginStart()
     RegConsoleCmd("sm_zbrane", CallBack);
     HookEvent("round_start", Event_RoundStart,EventHookMode_Pre);
     HookEvent("round_start", EventCallBack);
+    
+    LoadTranslations("primarygunsmenu.phrases");
 }
  
 public OnMapStart()
@@ -265,14 +267,6 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
                     }      
                    
                 }
-               
-               
-               
-               
-               
-               
-               
-       
             }
         }
     }
@@ -288,15 +282,15 @@ public Action CallBack(client,args)
 {
     if(useable==0)
     {
-        ReplyToCommand(client, "[SM] You can use /guns only 15 secons at round start!");
+        ReplyToCommand(client, "%T", "CantUse15secs");
     }
     if(useable==1)
     {
         arr[client][1] = -1;
         new Handle:menu = CreateMenu(menu1, MenuAction_Select | MenuAction_End | MenuAction_DisplayItem);
-        SetMenuTitle(menu, "Choose option:");
-        AddMenuItem(menu, "Choose gun this round", "Vybrat si zbran");
-        AddMenuItem(menu, "Choose gun every round", "Vybrat si zbran kazde kolo");
+        SetMenuTitle(menu, "%T", "MainMenuChooseOption");
+        AddMenuItem(menu, "%T", "ChooseGun");
+        AddMenuItem(menu, "%T", "ChooseGunEveryRound");
         DisplayMenu(menu, client, MENU_TIME_FOREVER);
     }
 }
@@ -312,10 +306,10 @@ public menu1(Handle:menu, MenuAction:action, param1, param2)
             new String:item[64];
             GetMenuItem(menu, param2, item, sizeof(item));
  
-            if (StrEqual(item, "Vybrat si zbran"))
+            if (StrEqual(item, "ChooseGun"))
             {
                 new Handle:menu2 = CreateMenu(guns, MenuAction_Select | MenuAction_Cancel | MenuAction_End | MenuAction_DisplayItem);
-                SetMenuTitle(menu2, "Choose gun");
+                SetMenuTitle(menu2, "%T", "ChooseGun");
                 AddMenuItem(menu2, "AK-47", "AK-47");
                 AddMenuItem(menu2, "Galil AR", "Galil AR");
                 AddMenuItem(menu2, "SSG 08", "SSG 08");
@@ -341,7 +335,7 @@ public menu1(Handle:menu, MenuAction:action, param1, param2)
                 AddMenuItem(menu2, "MAG-7", "MAG-7");
                 DisplayMenu(menu2, param1, MENU_TIME_FOREVER);
             }
-            else if (StrEqual(item, "Vybrat si zbran kazde kolo"))
+            else if (StrEqual(item, "ChooseGunEveryRound"))
             {
                 arr[param1][1] =1;
             }
@@ -361,16 +355,16 @@ public menu1(Handle:menu, MenuAction:action, param1, param2)
             new String:item[64];
             GetMenuItem(menu, param2, item, sizeof(item));
  
-            if (StrEqual(item, "Vybrat si zbran"))
+            if (StrEqual(item, "ChooseGun"))
             {
                 new String:translation[128];
-                Format(translation, sizeof(translation), "%T", "Vybrat si zbran", param1);   //Choose gun this round
+                Format(translation, sizeof(translation), "%T", "ChooseGun", param1);   //Choose gun this round
                 return RedrawMenuItem(translation);
             }
-            else if (StrEqual(item, "Vybrat si zbran kazde kolo"))  //Choose gun every round
+            else if (StrEqual(item, "ChooseGunEveryRound"))  //Choose gun every round
             {
                 new String:translation[128];
-                Format(translation, sizeof(translation), "%T", "Vybrat si zbran kazde kolo", param1);    //Choose gun every round
+                Format(translation, sizeof(translation), "%T", "ChooseGunEveryRound", param1);    //Choose gun every round
                 return RedrawMenuItem(translation);
             }
         }
@@ -395,35 +389,35 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 0;
                 if(useable==1)
                 {
-                 int a;
-                for(a = 0; a < 4; a++) // remove all weapons
+				int a;
+				for(a = 0; a < 4; a++) // remove all weapons
+				{
+                int weapon;
+                while((weapon = GetPlayerWeaponSlot(param1, a)) != -1)
                 {
-                    int weapon;
-                    while((weapon = GetPlayerWeaponSlot(param1, a)) != -1)
-                    {
-                        RemovePlayerItem(param1, weapon);
-                    }
+                  RemovePlayerItem(param1, weapon);
+                }
                 }
                 GivePlayerItem(param1, "weapon_knife");
                 if(team==2)
                 {
-                    GivePlayerItem(param1, "weapon_glock");
+                  GivePlayerItem(param1, "weapon_glock");
                 }
                 if(team==3)
                 {
-                    GivePlayerItem(param1, "weapon_usp_silencer")
+                  GivePlayerItem(param1, "weapon_usp_silencer")
                 }
                 GivePlayerItem(param1, "weapon_ak47");
-                }
+                }  
             }
             else if (StrEqual(item, "Galil AR"))
             {
                 arr[param1][0] = 1;
                 if(useable==1)
                 {
-                 int a;
-                for(a = 0; a < 4; a++) // remove all weapons
-                {
+				int a;
+				for(a = 0; a < 4; a++) // remove all weapons
+				{
                     int weapon;
                     while((weapon = GetPlayerWeaponSlot(param1, a)) != -1)
                     {
@@ -447,9 +441,9 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 2;
                 if(useable==1)
                 {
-                 int a;
-                for(a = 0; a < 4; a++) // remove all weapons
-                {
+				int a;
+				for(a = 0; a < 4; a++) // remove all weapons
+				{
                     int weapon;
                     while((weapon = GetPlayerWeaponSlot(param1, a)) != -1)
                     {
@@ -473,8 +467,8 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 3;
                 if(useable==1)
                 {
-                 int a;
-                for(a = 0; a < 4; a++) // remove all weapons
+				int a;
+				for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
                     while((weapon = GetPlayerWeaponSlot(param1, a)) != -1)
@@ -499,8 +493,8 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 4;
                 if(useable==1)
                 {
-                 int a;
-                for(a = 0; a < 4; a++) // remove all weapons
+				int a;
+				for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
                     while((weapon = GetPlayerWeaponSlot(param1, a)) != -1)
@@ -525,7 +519,7 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 5;
                 if(useable==1)
                 {
-                 int a;
+				int a;
                 for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
@@ -551,7 +545,7 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 6;
                 if(useable==1)
                 {
-                 int a;
+				int a;
                 for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
@@ -577,7 +571,7 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 7;
                 if(useable==1)
                 {
-                 int a;
+				int a;
                 for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
@@ -603,7 +597,7 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 8;
                 if(useable==1)
                 {
-                 int a;
+				int a;
                 for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
@@ -629,7 +623,7 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 9;
                 if(useable==1)
                 {
-                 int a;
+				int a;
                 for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
@@ -655,7 +649,7 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 10;
                 if(useable==1)
                 {
-                 int a;
+				int a;
                 for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
@@ -681,7 +675,7 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 11;
                 if(useable==1)
                 {
-                 int a;
+				int a;
                 for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
@@ -707,7 +701,7 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 12;
                 if(useable==1)
                 {
-                 int a;
+				int a;
                 for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
@@ -733,7 +727,7 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 13;
                 if(useable==1)
                 {
-                 int a;
+				int a;
                 for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
@@ -759,7 +753,7 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 14;
                 if(useable==1)
                 {
-                 int a;
+				int a;
                 for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
@@ -785,7 +779,7 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 15;
                 if(useable==1)
                 {
-                 int a;
+				int a;
                 for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
@@ -811,7 +805,7 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 16;
                 if(useable==1)
                 {
-                 int a;
+				int a;
                 for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
@@ -863,7 +857,7 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 18;
                 if(useable==1)
                 {
-                 int a;
+				int a;
                 for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
@@ -889,7 +883,7 @@ public guns(Handle:menu2, MenuAction:action, param1, param2)
                 arr[param1][0] = 19;
                 if(useable==1)
                 {
-                 int a;
+                int a;
                 for(a = 0; a < 4; a++) // remove all weapons
                 {
                     int weapon;
@@ -1163,13 +1157,11 @@ public void EventCallBack(Event event, const char[] name, bool dontBroadcast)
         if(IsClientInGame(h)==true&&GetClientTeam(h)!=1&&arr[h][1]==-1)
         {
             new Handle:menu = CreateMenu(menu1, MenuAction_Select | MenuAction_End | MenuAction_DisplayItem);
-            SetMenuTitle(menu, "Choose option:");
-            AddMenuItem(menu, "Choose gun this round", "Vybrat si zbran");
-            AddMenuItem(menu, "Choose gun every round", "Vybrat si zbran kazde kolo");
-            DisplayMenu(menu, h, 15.0);
+            SetMenuTitle(menu, "%T", "MainMenuChooseOption");
+            AddMenuItem(menu, "%T", "ChooseGun");
+            AddMenuItem(menu, "%T", "ChooseGunEveryRound");
+            DisplayMenu(menu, 15.0, h_timer);
         }
     }
-   
-
-    }
+}
 
