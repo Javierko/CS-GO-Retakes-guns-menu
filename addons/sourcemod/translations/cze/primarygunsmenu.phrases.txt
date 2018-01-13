@@ -2,32 +2,27 @@
 {
 	"CantUse15secs"
 	{
-		"cze" "[YourPortal] You can use /guns only 15 secons at round start!"
+		"cze" "[\x03TvujPortál\x01] /guns můžeš použít pouze 15 sekund na začátku kole."
 	}
 	
 	"MainMenuChooseOption"
 	{
-		"cze" "Choose option:"
+		"cze" "Vyber si možnost:"
 	}
 	
 	"ChooseGun"
 	{
-		"cze" "Choose gun this round"
+		"cze" "Vybrat zbraň toto kolo"
 	}
 	
 	"ChooseGunEveryRound"
 	{
-		"cze" "Choose gun every round"
+		"cze" "Vybrat zbraň každé kolo"
 	}
 	
 	"ChooseGun"
 	{
-		"cze" "Choose gun"
-	}
-	
-	"CantUse15secs"
-	{
-		"cze" "[YourPortal] You can use /guns only 15 secons at round start!"
+		"cze" "Vybrat zbraň"
 	}
 }
 
