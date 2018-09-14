@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"OnceTime"
+	{
+		"en"		"You can use this command only once."
+	}
+
+	"Alive"
+	{
+		"cze"		"You must be alive for access to this command."
+	}
+}
