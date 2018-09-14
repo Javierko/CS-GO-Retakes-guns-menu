@@ -301,17 +301,23 @@ Booleans + functions
 
 stock void StripWeapons(int client)
 {
-	int wepIdx;
-	for (int x = 0; x <= 4; x++)
+	if(IsValidClient(client))
 	{
-		if (x != 2 && (wepIdx = GetPlayerWeaponSlot(client, x)) != -1)
+		int wepIdx;
+		for (int x = 0; x <= 4; x++)
 		{
-			RemovePlayerItem(client, wepIdx);
-			RemoveEdict(wepIdx);
+			if (x != 2 && (wepIdx = GetPlayerWeaponSlot(client, x)) != -1)
+			{
+				RemovePlayerItem(client, wepIdx);
+				RemoveEdict(wepIdx);
+			}
+		}
+		if(IsValidClient(client))
+		{
+			int knife = GetPlayerWeaponSlot(client, CS_SLOT_KNIFE);
+			EquipPlayerWeapon(client, knife);
 		}
 	}
-	int knife = GetPlayerWeaponSlot(client, CS_SLOT_KNIFE);
-	EquipPlayerWeapon(client, knife);
 }
 
 stock bool IsValidClient(int client, bool alive = false)
