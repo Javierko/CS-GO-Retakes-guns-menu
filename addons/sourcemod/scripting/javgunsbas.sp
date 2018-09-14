@@ -146,7 +146,7 @@ public void ChooseSGun(int client)
 			{
 				menu.AddItem(g_cWeaponsS[wep], g_cWeaponsSNames[wep]);
 			}
-			menu.ExitBackButton = true;
+			menu.ExitButton = true;
 			menu.Display(client, 25);
 		}
 		else
@@ -182,17 +182,6 @@ public int mChooseSGun(Menu menu, MenuAction action, int client, int index)
 		else
 		{
 			PrintToChat(client, "%t", "Alive");
-		}
-	}
-	if(action == MenuAction_End)
-	{
-		delete menu;
-	}
-	if(action == MenuAction_Cancel)
-	{
-		if(index == MenuCancel_ExitBack)
-		{
-			GunsMenu(client);
 		}
 	}
 }
