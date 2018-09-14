@@ -12,19 +12,19 @@
 		"cze"		"Musíš být naživu pro tento příkaz."
 	}
   
-  "MenuTitleChooseOption"
+	"MenuTitleChooseOption"
 	{
 		"en"		"Choose your option:"
 		"cze"		"Vyber si možnost:"
 	}
   
-  "MenuChooseSec"
+	"MenuChooseSec"
 	{
 		"en"		"Choose your secondary weapon:"
 		"cze"		"Vyber si sekundární zbraň:"
 	}
   
-  "MenuChoosePrim"
+	"MenuChoosePrim"
 	{
 		"en"		"Choose your primary weapon:"
 		"cze"		"Vyber si primární zbraň:"
