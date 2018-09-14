@@ -146,7 +146,7 @@ public void ChooseSGun(int client)
 			{
 				menu.AddItem(g_cWeaponsS[wep], g_cWeaponsSNames[wep]);
 			}
-			menu.ExitButton = true;
+			menu.ExitButton = false;
 			menu.Display(client, 25);
 		}
 		else
