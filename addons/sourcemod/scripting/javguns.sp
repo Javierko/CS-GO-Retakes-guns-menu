@@ -143,7 +143,7 @@ public void ChooseStableGun(int client)
 	{
 		if(g_bUseable[client])
 		{
-			Menu menu = new Menu(mChooseGun);
+			Menu menu = new Menu(mChooseStableGun);
 			menu.SetTitle("Choose gun");
 			for(int wep; wep < sizeof(g_cWeapons); wep++)
 			{
@@ -163,7 +163,7 @@ public void ChooseStableGun(int client)
 	}
 }
 
-public int mChooseGun(Menu menu, MenuAction action, int client, int index)
+public int mChooseStableGun(Menu menu, MenuAction action, int client, int index)
 {
 	if(action == MenuAction_Select)
 	{
@@ -211,7 +211,7 @@ public void ChooseGun(int client)
 	{
 		if(g_bUseable[client])
 		{
-			Menu menu = new Menu(mChooseStableGun);
+			Menu menu = new Menu(mChooseGun);
 			menu.SetTitle("Choose gun");
 			for(int wep; wep < sizeof(g_cWeapons); wep++)
 			{
@@ -231,7 +231,7 @@ public void ChooseGun(int client)
 	}
 }
 
-public int mChooseStableGun(Menu menu, MenuAction action, int client, int index)
+public int mChooseGun(Menu menu, MenuAction action, int client, int index)
 {
 	if(action == MenuAction_Select)
 	{
