@@ -89,7 +89,7 @@ public void GunsMenu(int client)
 		if(!g_bUseable[client])
 		{
 			Menu menu = new Menu(mGunsMenu);
-			menu.SetTitle("Choose your option:");
+			menu.SetTitle("%t", "MenuTitleChooseOption");
 			menu.AddItem("cur", "Choose current gun");
 			
 			menu.Display(client, 25);
@@ -143,7 +143,7 @@ public void ChooseSGun(int client)
 		if(!g_bUseable[client])
 		{
 			Menu menu = new Menu(mChooseSGun);
-			menu.SetTitle("Choose gun");
+			menu.SetTitle("%t", "MenuChooseSec");
 			for(int wep; wep < sizeof(g_cWeaponsS); wep++)
 			{
 				menu.AddItem(g_cWeaponsS[wep], g_cWeaponsSNames[wep]);
@@ -211,7 +211,7 @@ public void ChooseGun(int client)
 		if(!g_bUseable[client])
 		{
 			Menu menu = new Menu(mChooseGun);
-			menu.SetTitle("Choose gun");
+			menu.SetTitle("%t", "MenuChoosePrim");
 			for(int wep; wep < sizeof(g_cWeapons); wep++)
 			{
 				menu.AddItem(g_cWeapons[wep], g_cWeaponsNames[wep]);
