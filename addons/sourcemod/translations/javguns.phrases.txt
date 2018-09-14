@@ -3,30 +3,30 @@
 	"OnceTime"
 	{
 		"en"		"You can use this command only once."
-    "cze"		"Tento příkaz můžeš použít pouze jednou."
+		"cze"		"Tento příkaz můžeš použít pouze jednou."
 	}
 
 	"Alive"
 	{
 		"en"		"You must be alive for access to this command."
-    "cze"		"Musíš být naživu pro tento příkaz."
+		"cze"		"Musíš být naživu pro tento příkaz."
 	}
   
   "MenuTitleChooseOption"
 	{
 		"en"		"Choose your option:"
-    "cze"		"Vyber si možnost:"
+		"cze"		"Vyber si možnost:"
 	}
   
   "MenuChooseSec"
 	{
 		"en"		"Choose your secondary weapon:"
-    "cze"		"Vyber si sekundární zbraň:"
+		"cze"		"Vyber si sekundární zbraň:"
 	}
   
   "MenuChoosePrim"
 	{
 		"en"		"Choose your primary weapon:"
-    "cze"		"Vyber si primární zbraň:"
+		"cze"		"Vyber si primární zbraň:"
 	}
 }
