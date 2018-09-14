@@ -8,6 +8,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
+#include <sdkhooks>
 
 bool g_bUseable[MAXPLAYERS + 1] = false;
 char g_cChoosedGunP[MAXPLAYERS + 1][32];
@@ -171,8 +172,24 @@ public int mChooseSGun(Menu menu, MenuAction action, int client, int index)
 			{
 				char szItem[64];
 				menu.GetItem(index, szItem, sizeof(szItem));
+				
+				int iSecWep;
+				int iPrimWep;
+				
+				if ((iSecWep = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY)) != -1)
+				{
+					SDKHooks_DropWeapon(client, iSecWep, NULL_VECTOR, NULL_VECTOR);
+					AcceptEntityInput(iSecWep, "Kill");							
+				}
+				if((iPrimWep = GetPlayerWeaponSlot(client, CS_SLOT_PRIMARY)) != -1)
+				{
+					SDKHooks_DropWeapon(client, iPrimWep, NULL_VECTOR, NULL_VECTOR);
+					AcceptEntityInput(iPrimWep, "Kill");
+				}
+				
 				GivePlayerItem(client, szItem);
 				GivePlayerItem(client, g_cChoosedGunP[client]);
+				
 				g_bUseable[client] = true;
 			}
 			else
