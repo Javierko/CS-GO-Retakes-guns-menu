@@ -9,17 +9,15 @@
 #include <sdktools>
 #include <cstrike>
 
-bool g_bUseable[MAXPLAYERS + 1];
-bool g_bChoosed[MAXPLAYERS + 1];
+bool g_bUseable[MAXPLAYERS + 1] = false;
 char g_cChoosedGunP[MAXPLAYERS + 1][32];
-char g_cChoosedGunS[MAXPLAYERS + 1][32];
 
 char g_cWeapons[][] =
 {
-	"weapon_ak47", "weapon_aug", "weapon_bizon", "weapon_deagle", "weapon_elite", "weapon_famas", "weapon_fiveseven",
-	"weapon_g3sg1", "weapon_galilar", "weapon_glock", "weapon_hkp2000", "weapon_m249", "weapon_m4a1",
-	"weapon_mac10", "weapon_mag7", "weapon_mp7", "weapon_mp9", "weapon_p250", "weapon_p90",
-	"weapon_scar20", "weapon_sg556", "weapon_ssg08", "weapon_tec9", "weapon_ump45", "weapon_xm1014"
+	"weapon_ak47", "weapon_aug", "weapon_bizon", "weapon_famas",
+	"weapon_g3sg1", "weapon_galilar", "weapon_m249", "weapon_m4a1",
+	"weapon_mac10", "weapon_mag7", "weapon_mp7", "weapon_mp9", "weapon_p90",
+	"weapon_scar20", "weapon_sg556", "weapon_ssg08", "weapon_ump45", "weapon_xm1014"
 };
 
 char g_cWeaponsS[][] =  { "weapon_deagle", "weapon_usp_silencer", "weapon_glock", "weapon_p250", "weapon_fiveseven", "weapon_tec9", "weapon_hkp2000", "weapon_revolver" };
@@ -27,10 +25,10 @@ char g_cWeaponsSNames[][] =  { "Deagle", "USP-S", "Glock-18", "P250", "Five-Seve
 
 char g_cWeaponsNames[][] =
 {
-	"AK-47", "AUG", "Bizon", "Deagle", "Dual Berretas", "Famas", "Five-Seven",
-	"G3SG1", "Galil", "Glock-18", "P-2000", "M-249", "M4A4",
-	"Mac-10", "MAG-7", "MP7", "MP9", "P250", "P90",
-	"SCAR-20", "Scout", "SSG 08", "Tec-9", "UMP-45", "XM1014"
+	"AK-47", "AUG", "Bizon", "Famas",
+	"G3SG1", "Galil", "M-249", "M4A4",
+	"Mac-10", "MAG-7", "MP7", "MP9", "P90",
+	"SCAR-20", "Scout", "SSG 08", "UMP-45", "XM1014"
 };
 
 #pragma newdecls required
@@ -51,6 +49,7 @@ public void OnPluginStart()
 	
 	//Events
 	HookEvent("round_start", Event_RoundStart);
+	HookEvent("player_death", Event_PlayerDeath);
 	
 	//Translations
 	LoadTranslations("javguns.phrases");
@@ -60,7 +59,7 @@ public Action Command_Guns(int client, int args)
 {
 	if(IsValidClient(client, true))
 	{
-		if(g_bUseable[client])
+		if(!g_bUseable[client])
 		{
 			GunsMenu(client);
 		}
@@ -85,12 +84,11 @@ public void GunsMenu(int client)
 {
 	if(IsValidClient(client, true))
 	{
-		if(g_bUseable[client])
+		if(!g_bUseable[client])
 		{
 			Menu menu = new Menu(mGunsMenu);
 			menu.SetTitle("Choose your option:");
 			menu.AddItem("cur", "Choose current gun");
-			menu.AddItem("stable", "Choose permanent gun");
 			
 			menu.Display(client, 25);
 		}
@@ -111,7 +109,7 @@ public int mGunsMenu(Menu menu, MenuAction action, int client, int index)
 	{
 		if(IsValidClient(client, true))
 		{
-			if(g_bUseable[client])
+			if(!g_bUseable[client])
 			{
 				char szItem[12];
 				menu.GetItem(index, szItem, sizeof(szItem));
@@ -119,10 +117,6 @@ public int mGunsMenu(Menu menu, MenuAction action, int client, int index)
 				{			
 					ChooseGun(client);
 				}
-				else if(StrEqual(szItem, "stable"))
-				{
-					ChooseStableGun(client);
-				}
 			}
 			else
 			{
@@ -132,139 +126,6 @@ public int mGunsMenu(Menu menu, MenuAction action, int client, int index)
 		else
 		{
 			PrintToChat(client, "%t", "Alive");
-		}
-	}
-}
-
-/*
-Second menus
-*/
-
-public void ChooseSStableGun(int client)
-{
-	if(IsValidClient(client))
-	{
-		if(g_bUseable[client])
-		{
-			Menu menu = new Menu(mChooseSStableGun);
-			menu.SetTitle("Choose gun");
-			for(int wep; wep < sizeof(g_cWeaponsS); wep++)
-			{
-				menu.AddItem(g_cWeaponsS[wep], g_cWeaponsSNames[wep]);
-			}
-			
-			menu.ExitButton = false;
-			menu.Display(client, MENU_TIME_FOREVER);
-		}
-		else
-		{
-			PrintToChat(client, "%t", "OnceTime");
-		}
-	}
-	else
-	{
-		PrintToChat(client, "%t", "Alive");
-	}
-}
-
-public int mChooseSStableGun(Menu menu, MenuAction action, int client, int index)
-{
-	if(action == MenuAction_Select)
-	{
-		if(IsValidClient(client, true))
-		{
-			if(g_bUseable[client])
-			{
-				char szItem[12];
-				menu.GetItem(index, szItem, sizeof(szItem));
-				g_bUseable[client] = true;
-				g_bChoosed[client] = true;
-				Format(g_cChoosedGunS[client], sizeof(g_cChoosedGunS[]), szItem);
-				GivePlayerItem(client, szItem);
-			}
-			else
-			{
-				PrintToChat(client, "%t", "OnceTime");
-			}
-		}
-		else
-		{
-			PrintToChat(client, "%t", "Alive");
-		}
-	}
-	if(action == MenuAction_End)
-	{
-		delete menu;
-	}
-	if(action == MenuAction_Cancel)
-	{
-		if(index == MenuCancel_ExitBack)
-		{
-			GunsMenu(client);
-		}
-	}
-}
-
-public void ChooseStableGun(int client)
-{
-	if(IsValidClient(client))
-	{
-		if(g_bUseable[client])
-		{
-			Menu menu = new Menu(mChooseStableGun);
-			menu.SetTitle("Choose gun");
-			for(int wep; wep < sizeof(g_cWeapons); wep++)
-			{
-				menu.AddItem(g_cWeapons[wep], g_cWeaponsNames[wep]);
-			}
-			menu.ExitBackButton = true;
-			menu.Display(client, 25);
-		}
-		else
-		{
-			PrintToChat(client, "%t", "OnceTime");
-		}
-	}
-	else
-	{
-		PrintToChat(client, "%t", "Alive");
-	}
-}
-
-public int mChooseStableGun(Menu menu, MenuAction action, int client, int index)
-{
-	if(action == MenuAction_Select)
-	{
-		if(IsValidClient(client, true))
-		{
-			if(g_bUseable[client])
-			{
-				char szItem[12];
-				menu.GetItem(index, szItem, sizeof(szItem));
-				g_bUseable[client] = true;
-				g_bChoosed[client] = true;
-				Format(g_cChoosedGunP[client], sizeof(g_cChoosedGunP[]), szItem);
-				GivePlayerItem(client, szItem);
-			}
-			else
-			{
-				PrintToChat(client, "%t", "OnceTime");
-			}
-		}
-		else
-		{
-			PrintToChat(client, "%t", "Alive");
-		}
-	}
-	if(action == MenuAction_End)
-	{
-		delete menu;
-	}
-	if(action == MenuAction_Cancel)
-	{
-		if(index == MenuCancel_ExitBack)
-		{
-			GunsMenu(client);
 		}
 	}
 }
@@ -277,7 +138,7 @@ public void ChooseSGun(int client)
 {
 	if(IsValidClient(client))
 	{
-		if(g_bUseable[client])
+		if(!g_bUseable[client])
 		{
 			Menu menu = new Menu(mChooseSGun);
 			menu.SetTitle("Choose gun");
@@ -285,9 +146,8 @@ public void ChooseSGun(int client)
 			{
 				menu.AddItem(g_cWeaponsS[wep], g_cWeaponsSNames[wep]);
 			}
-			
-			menu.ExitButton = false;
-			menu.Display(client, MENU_TIME_FOREVER);
+			menu.ExitBackButton = true;
+			menu.Display(client, 25);
 		}
 		else
 		{
@@ -306,12 +166,13 @@ public int mChooseSGun(Menu menu, MenuAction action, int client, int index)
 	{
 		if(IsValidClient(client, true))
 		{
-			if(g_bUseable[client])
+			if(!g_bUseable[client])
 			{
-				char szItem[12];
+				char szItem[64];
 				menu.GetItem(index, szItem, sizeof(szItem));
-				g_bUseable[client] = true;
 				GivePlayerItem(client, szItem);
+				GivePlayerItem(client, g_cChoosedGunP[client]);
+				g_bUseable[client] = true;
 			}
 			else
 			{
@@ -340,7 +201,7 @@ public void ChooseGun(int client)
 {
 	if(IsValidClient(client))
 	{
-		if(g_bUseable[client])
+		if(!g_bUseable[client])
 		{
 			Menu menu = new Menu(mChooseGun);
 			menu.SetTitle("Choose gun");
@@ -368,11 +229,11 @@ public int mChooseGun(Menu menu, MenuAction action, int client, int index)
 	{
 		if(IsValidClient(client, true))
 		{
-			if(g_bUseable[client])
+			if(!g_bUseable[client])
 			{
-				char szItem[12];
+				char szItem[64];
 				menu.GetItem(index, szItem, sizeof(szItem));
-				GivePlayerItem(client, szItem);
+				Format(g_cChoosedGunP[client], sizeof(g_cChoosedGunP[]), szItem);
 				ChooseSGun(client);
 			}
 			else
@@ -402,23 +263,26 @@ public int mChooseGun(Menu menu, MenuAction action, int client, int index)
 Events
 */
 
+public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
+{
+	int victim = GetClientOfUserId(GetEventInt(event, "userid"));
+	
+	if(IsValidClient(victim))
+	{
+		g_bUseable[victim] = false;
+	}
+}
+
 public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
+	CreateTimer(15.0, Timer_DisableGunsCMD);
 	for(int i = 1; i <= MaxClients; i++)
 	{
-		if(IsValidClient(i, true))
+		if(IsValidClient(i))
 		{
 			g_bUseable[i] = false;
-			g_bChoosed[i] = false;
 			GunsMenu(i);
-			CreateTimer(15.0, Timer_DisableGunsCMD, GetClientUserId(i));
 			StripWeapons(i);
-			
-			if(g_bChoosed[i])
-			{
-				GivePlayerItem(i, g_cChoosedGunP[i]);
-				GivePlayerItem(i, g_cChoosedGunS[i]);
-			}
 		}
 	}
 }
@@ -427,16 +291,19 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 Timers
 */
 
-public Action Timer_DisableGunsCMD(Handle timer, any client)
+public Action Timer_DisableGunsCMD(Handle timer)
 {
-	if(IsValidClient(client))
+	for(int i = 1; i <= MaxClients; i++)
 	{
-		g_bUseable[client] = true;
-		
-		return Plugin_Stop;
+		if(IsValidClient(i))
+		{
+			g_bUseable[i] = true;
+			
+			return Plugin_Stop;
+		}
 	}
 	
-	return Plugin_Stop;
+	return Plugin_Continue;
 }
 
 /*
@@ -446,7 +313,7 @@ Booleans + functions
 stock void StripWeapons(int client)
 {
 	int wepIdx;
-	for (int x = 0; x <= 5; x++)
+	for (int x = 0; x <= 4; x++)
 	{
 		if (x != 2 && (wepIdx = GetPlayerWeaponSlot(client, x)) != -1)
 		{
