@@ -1,7 +1,7 @@
 # Simple guns menu (good for retakes)
 
-* Basic /guns menu for player.
-* Players can choose only one from primary guns, and they can choose only first 15 second at round start..
+* Easy and simple plugin to make menu with guns
+* If player dont choose his gun, menu will be disabled (after 15 seconds from round start)
 
 ## Update log
 * 1.0.0 New syntax, removed old bad code and style
