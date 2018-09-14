@@ -50,6 +50,7 @@ public void OnPluginStart()
 	//Events
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_death", Event_PlayerDeath);
+	HookEvent("player_spawn", Event_PlayerSpawn);
 	
 	//Translations
 	LoadTranslations("javguns.phrases");
@@ -251,6 +252,16 @@ public int mChooseGun(Menu menu, MenuAction action, int client, int index)
 /*
 Events
 */
+
+public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	
+	if(IsValidClient(client))
+	{
+		g_bUseable[client] = false;
+	}
+}
 
 public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
