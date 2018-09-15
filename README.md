@@ -4,6 +4,7 @@
 * If player dont choose his gun, menu will be disabled (after 15 seconds from round start)
 
 ## Update log
+* 1.0.2 - Added new cvar for better ordering menu
 * 1.0.1 - Added pernament choose, some fix
 * 1.0.0 - New syntax, removed old bad code and style
 
