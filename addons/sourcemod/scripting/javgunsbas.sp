@@ -3,7 +3,7 @@
 #define DEBUG
 
 #define PLUGIN_AUTHOR "Javierko"
-#define PLUGIN_VERSION "1.0.0"
+#define PLUGIN_VERSION "1.0.1"
 
 #include <sourcemod>
 #include <sdktools>
@@ -12,6 +12,11 @@
 
 bool g_bUseable[MAXPLAYERS + 1] = false;
 char g_cChoosedGunP[MAXPLAYERS + 1][32];
+
+char g_cChoosedGunStartP[MAXPLAYERS + 1][32];
+char g_cChoosedGunStartS[MAXPLAYERS + 1][32];
+
+bool g_bChoosed[MAXPLAYERS + 1] = false;
 
 char g_cWeapons[][] =
 {
@@ -57,6 +62,14 @@ public void OnPluginStart()
 	LoadTranslations("javguns.phrases");
 }
 
+public void OnMapStart()
+{
+	for(int i = 1; i <= MaxClients; i++)
+	{
+		g_bChoosed[i] = false;
+	}
+}
+
 public Action Command_Guns(int client, int args)
 {
 	if(IsValidClient(client, true))
@@ -91,6 +104,7 @@ public void GunsMenu(int client)
 			Menu menu = new Menu(mGunsMenu);
 			menu.SetTitle("%t", "MenuTitleChooseOption");
 			menu.AddItem("cur", "Choose current gun");
+			menu.AddItem("stable", "Choose permanent gun");
 			
 			menu.Display(client, 25);
 		}
@@ -119,6 +133,148 @@ public int mGunsMenu(Menu menu, MenuAction action, int client, int index)
 				{			
 					ChooseGun(client);
 				}
+				else if(StrEqual(szItem, "stable"))
+				{			
+					ChooseStableGun(client);
+				}
+			}
+			else
+			{
+				PrintToChat(client, "%t", "OnceTime");
+			}
+		}
+		else
+		{
+			PrintToChat(client, "%t", "Alive");
+		}
+	}
+}
+
+/*
+Second menu
+*/
+
+public void ChooseStableGun(int client)
+{
+	if(IsValidClient(client, true))
+	{
+		if(!g_bUseable[client])
+		{
+			Menu menu = new Menu(mChooseGun);
+			menu.SetTitle("%t", "MenuChoosePrim");
+			for(int wep; wep < sizeof(g_cWeapons); wep++)
+			{
+				menu.AddItem(g_cWeapons[wep], g_cWeaponsNames[wep]);
+			}
+			menu.ExitBackButton = true;
+			menu.Display(client, 25);
+		}
+		else
+		{
+			PrintToChat(client, "%t", "OnceTime");
+		}
+	}
+	else
+	{
+		PrintToChat(client, "%t", "Alive");
+	}
+}
+
+public int mChooseStableGun(Menu menu, MenuAction action, int client, int index)
+{
+	if(action == MenuAction_Select)
+	{
+		if(IsValidClient(client, true))
+		{
+			if(!g_bUseable[client])
+			{
+				char szItem[64];
+				menu.GetItem(index, szItem, sizeof(szItem));
+				Format(g_cChoosedGunStartP[client], sizeof(g_cChoosedGunStartP[]), szItem);
+				ChooseSStableGun(client);
+			}
+			else
+			{
+				PrintToChat(client, "%t", "OnceTime");
+			}
+		}
+		else
+		{
+			PrintToChat(client, "%t", "Alive");
+		}
+	}
+	if(action == MenuAction_End)
+	{
+		delete menu;
+	}
+	if(action == MenuAction_Cancel)
+	{
+		if(index == MenuCancel_ExitBack)
+		{
+			GunsMenu(client);
+		}
+	}
+}
+
+
+public void ChooseSStableGun(int client)
+{
+	if(IsValidClient(client, true))
+	{
+		if(!g_bUseable[client])
+		{
+			Menu menu = new Menu(mChooseSStableGun);
+			menu.SetTitle("%t", "MenuChooseSec");
+			for(int wep; wep < sizeof(g_cWeaponsS); wep++)
+			{
+				menu.AddItem(g_cWeaponsS[wep], g_cWeaponsSNames[wep]);
+			}
+			menu.ExitButton = false;
+			menu.Display(client, 25);
+		}
+		else
+		{
+			PrintToChat(client, "%t", "OnceTime");
+		}
+	}
+	else
+	{
+		PrintToChat(client, "%t", "Alive");
+	}
+}
+
+public int mChooseSStableGun(Menu menu, MenuAction action, int client, int index)
+{
+	if(action == MenuAction_Select)
+	{
+		if(IsValidClient(client, true))
+		{
+			if(!g_bUseable[client])
+			{
+				char szItem[64];
+				menu.GetItem(index, szItem, sizeof(szItem));
+				
+				Format(g_cChoosedGunStartS[client], sizeof(g_cChoosedGunStartS[]), szItem);
+				
+				int iSecWep;
+				int iPrimWep;
+				
+				if ((iSecWep = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY)) != -1)
+				{
+					SDKHooks_DropWeapon(client, iSecWep, NULL_VECTOR, NULL_VECTOR);
+					AcceptEntityInput(iSecWep, "Kill");							
+				}
+				if((iPrimWep = GetPlayerWeaponSlot(client, CS_SLOT_PRIMARY)) != -1)
+				{
+					SDKHooks_DropWeapon(client, iPrimWep, NULL_VECTOR, NULL_VECTOR);
+					AcceptEntityInput(iPrimWep, "Kill");
+				}
+				
+				GivePlayerItem(client, g_cChoosedGunStartS[client]);
+				GivePlayerItem(client, g_cChoosedGunStartP[client]);
+				
+				g_bUseable[client] = true;
+				g_bChoosed[client] = true;
 			}
 			else
 			{
@@ -138,7 +294,7 @@ First menus
 
 public void ChooseSGun(int client)
 {
-	if(IsValidClient(client))
+	if(IsValidClient(client, true))
 	{
 		if(!g_bUseable[client])
 		{
@@ -206,7 +362,7 @@ public int mChooseSGun(Menu menu, MenuAction action, int client, int index)
 
 public void ChooseGun(int client)
 {
-	if(IsValidClient(client))
+	if(IsValidClient(client, true))
 	{
 		if(!g_bUseable[client])
 		{
@@ -277,6 +433,11 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 	if(IsValidClient(client))
 	{
 		g_bUseable[client] = false;
+		if(g_bChoosed[client])
+		{
+			GivePlayerItem(client, g_cChoosedGunStartS[client]);
+			GivePlayerItem(client, g_cChoosedGunStartP[client]);
+		}
 	}
 }
 

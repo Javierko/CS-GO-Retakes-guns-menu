@@ -4,7 +4,8 @@
 * If player dont choose his gun, menu will be disabled (after 15 seconds from round start)
 
 ## Update log
-* 1.0.0 New syntax, removed old bad code and style
+* 1.0.1 - Added pernament choose, some fix
+* 1.0.0 - New syntax, removed old bad code and style
 
 ## Commands  
 * sm_guns - Open guns menu
