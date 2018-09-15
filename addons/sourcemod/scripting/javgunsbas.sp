@@ -493,9 +493,9 @@ stock void StripWeapons(int client)
 	if(IsValidClient(client))
 	{
 		int wepIdx;
-		for (int x = 0; x <= 4; x++)
+		for (int x = 0; x <= 5; x++)
 		{
-			if (x != 2 && (wepIdx = GetPlayerWeaponSlot(client, x)) != -1)
+			if (x != 2 && x != 5 && (wepIdx = GetPlayerWeaponSlot(client, x)) != -1)
 			{
 				RemovePlayerItem(client, wepIdx);
 				RemoveEdict(wepIdx);
