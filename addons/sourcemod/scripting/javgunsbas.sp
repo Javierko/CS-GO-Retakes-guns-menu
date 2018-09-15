@@ -18,12 +18,30 @@ char g_cChoosedGunStartS[MAXPLAYERS + 1][32];
 
 bool g_bChoosed[MAXPLAYERS + 1] = false;
 
+ConVar g_cvOrder;
+
 char g_cWeapons[][] =
 {
-	"weapon_ak47", "weapon_aug", "weapon_bizon", "weapon_famas",
+	"weapon_ak47", "weapon_aug", "weapon_awp", "weapon_bizon", "weapon_famas",
 	"weapon_g3sg1", "weapon_galilar", "weapon_m249", "weapon_m4a1",
-	"weapon_mac10", "weapon_mag7", "weapon_mp7", "weapon_mp9", "weapon_p90",
+	"weapon_mac10", "weapon_mag7", "weapon_mp5sd", "weapon_mp7", "weapon_mp9", "weapon_negev", "weapon_p90",
 	"weapon_scar20", "weapon_sg556", "weapon_ssg08", "weapon_ump45", "weapon_xm1014"
+};
+
+char g_cWeapons1[][] =
+{
+	"weapon_ak47", "weapon_m4a1", "weapon_awp", "weapon_m4a1_silencer",
+	"weapon_famas", "weapon_galilar", "weapon_sg556", "weapon_aug",
+	"weapon_scar20", "weapon_g3sg1", "weapon_mp7", "weapon_mp9", "weapon_p90",
+	"weapon_ssg08", "weapon_mag7", "weapon_nova", "weapon_ump45", "weapon_xm1014", "weapon_mp5sd", "weapon_m249", "weapon_negev"
+};
+
+char g_cWeaponsNames1[][] =
+{
+	"AK-47", "M4A4", "AWP", "M4A1-S",
+	"Famas", "Galil", "SG556", "AUG",
+	"SCAR-20", "G3SG1", "MP7", "MP9", "P90",
+	"Scout", "Mag-7", "Nova", "UMP-45", "XM1014", "MP5", "M-249", "Negev"
 };
 
 char g_cWeaponsS[][] =  { "weapon_deagle", "weapon_usp_silencer", "weapon_glock", "weapon_p250", "weapon_fiveseven", "weapon_tec9", "weapon_hkp2000", "weapon_revolver" };
@@ -31,9 +49,9 @@ char g_cWeaponsSNames[][] =  { "Deagle", "USP-S", "Glock-18", "P250", "Five-Seve
 
 char g_cWeaponsNames[][] =
 {
-	"AK-47", "AUG", "Bizon", "Famas",
+	"AK-47", "AUG", "AWP", "Bizon", "Famas",
 	"G3SG1", "Galil", "M-249", "M4A4",
-	"Mac-10", "MAG-7", "MP7", "MP9", "P90",
+	"Mac-10", "MAG-7", "MP5", "MP7", "MP9", "Negev", "P90",
 	"SCAR-20", "Scout", "SSG 08", "UMP-45", "XM1014"
 };
 
@@ -58,8 +76,14 @@ public void OnPluginStart()
 	HookEvent("player_death", Event_PlayerDeath);
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	
+	//Cvars
+	g_cvOrder = CreateConVar("sm_gunspl_menuorder", "0", "1 - Order by useable, 0 - order by alphabeth", _, true, 0.0, true, 1.0);
+	
 	//Translations
 	LoadTranslations("javguns.phrases");
+	
+	//File with cvars
+	AutoExecConfig(true, "JavGuns");
 }
 
 public void OnMapStart()
@@ -162,9 +186,19 @@ public void ChooseStableGun(int client)
 		{
 			Menu menu = new Menu(mChooseGun);
 			menu.SetTitle("%t", "MenuChoosePrim");
-			for(int wep; wep < sizeof(g_cWeapons); wep++)
+			if(g_cvOrder.IntValue == 0)
 			{
-				menu.AddItem(g_cWeapons[wep], g_cWeaponsNames[wep]);
+				for(int wep; wep < sizeof(g_cWeapons); wep++)
+				{
+					menu.AddItem(g_cWeapons[wep], g_cWeaponsNames[wep]);
+				}
+			}
+			else if(g_cvOrder.IntValue == 1)
+			{
+				for(int wep; wep < sizeof(g_cWeapons1); wep++)
+				{
+					menu.AddItem(g_cWeapons1[wep], g_cWeaponsNames1[wep]);
+				}	
 			}
 			menu.ExitBackButton = true;
 			menu.Display(client, 25);
@@ -368,9 +402,19 @@ public void ChooseGun(int client)
 		{
 			Menu menu = new Menu(mChooseGun);
 			menu.SetTitle("%t", "MenuChoosePrim");
-			for(int wep; wep < sizeof(g_cWeapons); wep++)
+			if(g_cvOrder.IntValue == 0)
 			{
-				menu.AddItem(g_cWeapons[wep], g_cWeaponsNames[wep]);
+				for(int wep; wep < sizeof(g_cWeapons); wep++)
+				{
+					menu.AddItem(g_cWeapons[wep], g_cWeaponsNames[wep]);
+				}
+			}
+			else if(g_cvOrder.IntValue == 1)
+			{
+				for(int wep; wep < sizeof(g_cWeapons1); wep++)
+				{
+					menu.AddItem(g_cWeapons1[wep], g_cWeaponsNames1[wep]);
+				}	
 			}
 			menu.ExitBackButton = true;
 			menu.Display(client, 25);

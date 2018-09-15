@@ -11,5 +11,5 @@
 * sm_guns - Open guns menu
 
 ## ConVars  
-* If you have idea on Cvars, tell me i should add it.
+* sm_gunspl_menuorder 0/1 = 1 - Order by useable, 0 - order by alphabeth
 
