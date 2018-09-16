@@ -539,15 +539,12 @@ stock void StripWeapons(int client)
 		int wepIdx;
 		for (int x = 0; x <= 5; x++)
 		{
-			if (x != 2 && x != 5 && (wepIdx = GetPlayerWeaponSlot(client, x)) != -1)
+			if (x != CS_SLOT_KNIFE && x != CS_SLOT_C4 && (wepIdx = GetPlayerWeaponSlot(client, x)) != -1)
 			{
 				RemovePlayerItem(client, wepIdx);
 				RemoveEdict(wepIdx);
 			}
 		}
-
-		int knife = GetPlayerWeaponSlot(client, CS_SLOT_KNIFE);
-		EquipPlayerWeapon(client, knife);
 	}
 }
 
